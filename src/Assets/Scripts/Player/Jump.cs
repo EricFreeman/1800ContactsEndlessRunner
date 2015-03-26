@@ -28,14 +28,13 @@ namespace Assets.Scripts.Player
                 _isJumping = true;
                 EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Jump });
             }
-
-            if (_isJumping)
+            else if (_isJumping)
             {
                 if (!_isFalling)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, _jumpPinnacle, JumpSpeed*Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, _jumpPinnacle, JumpSpeed * Time.deltaTime);
 
-                    if (transform.position == _jumpPinnacle)
+                    if (transform.position == _jumpPinnacle || Input.GetKeyDown(KeyCode.Space))
                     {
                         _isFalling = true;
                     }
