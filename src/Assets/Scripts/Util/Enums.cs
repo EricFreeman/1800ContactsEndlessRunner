@@ -13,10 +13,17 @@
         Background,
         TreeBackground1,
         TreeBackground2,
+        TreeForeground,
         Player,
         Enemies,
-        TreeForeground,
         Grass,
         Ui
+    }
+
+    public enum BatMovementTypes
+    {
+        Hover,
+        SwoopLow,
+        SwoopHigh
     }
 }
