@@ -17,6 +17,8 @@ namespace Assets.Scripts.Scene
             _spriteRenderer.sprite = TreeSprites.Random();
 
             var layer = Random.Range(0, 3);
+            var scale = Random.Range(.9f, 1.5f);
+            transform.localScale = new Vector3(scale, scale, 1);
 
             if (layer == 0)
             {
@@ -41,6 +43,11 @@ namespace Assets.Scripts.Scene
         void Update()
         {
             transform.Translate(-_speed * Time.deltaTime, 0, 0);
+
+            if (transform.position.x < -2)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
