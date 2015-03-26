@@ -48,6 +48,7 @@ namespace Assets.Scripts.UI
             if (Health == 0)
             {
                 EventAggregator.SendMessage(new PlayerDiedMessage());
+                EventAggregator.SendMessage(new PauseRunningMessage());
             }
         }
     }

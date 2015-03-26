@@ -4,9 +4,19 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Bat
 {
-    public class BatAttack : MonoBehaviour
+    public class BatAttack : MonoBehaviour, IListener<PlayerDiedMessage>
     {
         private bool _hasAttacked;
+
+        void Start()
+        {
+            this.Register<PlayerDiedMessage>();
+        }
+
+        void OnDestroy()
+        {
+            this.UnRegister<PlayerDiedMessage>();
+        }
 
         void OnTriggerEnter2D(Collider2D col)
         {
@@ -17,6 +27,11 @@ namespace Assets.Scripts.Bat
             
             GetComponentInChildren<BatAnimations>().TakeBox();
 
+            _hasAttacked = true;
+        }
+
+        public void Handle(PlayerDiedMessage message)
+        {
             _hasAttacked = true;
         }
     }

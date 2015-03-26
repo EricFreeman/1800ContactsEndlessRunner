@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices;
+using Assets.Scripts.Messages;
+using UnityEngine;
+using UnityEventAggregator;
 
 namespace Assets.Scripts.Managers
 {
-    public class BatManager : MonoBehaviour
+    public class BatManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
         public int MinSpawnDelay;
         public int MaxSpawnDelay;
@@ -11,13 +14,25 @@ namespace Assets.Scripts.Managers
 
         public GameObject BatGameObject;
 
+        private bool _isPaused;
+
         void Start()
         {
             _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
+            this.Register<PauseRunningMessage>();
+            this.Register<ResumeRunningMessage>();
+        }
+
+        private void OnDestroy()
+        {
+            this.UnRegister<PauseRunningMessage>();
+            this.UnRegister<ResumeRunningMessage>();
         }
 
         void Update()
         {
+            if (_isPaused) return;
+
             _currentSpawnDelay--;
 
             if (_currentSpawnDelay <= 0)
@@ -26,6 +41,16 @@ namespace Assets.Scripts.Managers
 
                 Instantiate(BatGameObject);
             }
+        }
+
+        public void Handle(PauseRunningMessage message)
+        {
+            _isPaused = true;
+        }
+
+        public void Handle(ResumeRunningMessage message)
+        {
+            _isPaused = false;
         }
     }
 }

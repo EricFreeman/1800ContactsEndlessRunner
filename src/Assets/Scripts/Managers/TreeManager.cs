@@ -2,17 +2,21 @@
 using UnityEngine;
 using UnityEventAggregator;
 
-namespace Assets.Scripts.Scene
+namespace Assets.Scripts.Managers
 {
-    public class RepeatScroller : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
+    public class TreeManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
-        public float Length;
-        public float Speed;
+        public GameObject TreeGameObject;
+        public int MinTreeSpawnDelay;
+        public int MaxTreeSpawnDelay;
+        private int _currentTreeSpawnDelay;
 
         private bool _isPaused;
 
         void Start()
         {
+            _currentTreeSpawnDelay = Random.Range(MinTreeSpawnDelay, MaxTreeSpawnDelay);
+
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
         }
@@ -27,10 +31,13 @@ namespace Assets.Scripts.Scene
         {
             if (_isPaused) return;
 
-            transform.Translate(-Speed * Time.deltaTime, 0, 0);
-            if (transform.position.x <= -Length)
+            _currentTreeSpawnDelay--;
+
+            if (_currentTreeSpawnDelay <= 0)
             {
-                transform.Translate(Length, 0, 0);
+                _currentTreeSpawnDelay = Random.Range(MinTreeSpawnDelay, MaxTreeSpawnDelay);
+
+                Instantiate(TreeGameObject);
             }
         }
 

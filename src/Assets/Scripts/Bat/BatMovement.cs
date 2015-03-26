@@ -54,6 +54,11 @@ namespace Assets.Scripts.Bat
                     }
                 }
             }
+
+            if (transform.position.x < -2)
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void Handle(BatTakeBoxMessage message)

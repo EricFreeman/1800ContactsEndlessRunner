@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Messages;
 using Assets.Scripts.Util;
 using UnityEngine;
+using UnityEventAggregator;
 
 namespace Assets.Scripts.Scene
 {
-    public class BackgroundTree : MonoBehaviour
+    public class BackgroundTree : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
         public List<Sprite> TreeSprites;
         private float _speed;
+        private bool _isPaused;
 
         private SpriteRenderer _spriteRenderer;
 
@@ -38,16 +41,37 @@ namespace Assets.Scripts.Scene
                 _spriteRenderer.sortingOrder = (int)SpriteLayers.TreeBackground1;
                 _speed = .5f;
             }
+
+            this.Register<PauseRunningMessage>();
+            this.Register<ResumeRunningMessage>();
+        }
+
+        void OnDestroy()
+        {
+            this.UnRegister<PauseRunningMessage>();
+            this.UnRegister<ResumeRunningMessage>();
         }
 
         void Update()
         {
+            if (_isPaused) return;
+
             transform.Translate(-_speed * Time.deltaTime, 0, 0);
 
             if (transform.position.x < -2)
             {
                 Destroy(gameObject);
             }
+        }
+
+        public void Handle(PauseRunningMessage message)
+        {
+            _isPaused = true;
+        }
+
+        public void Handle(ResumeRunningMessage message)
+        {
+            _isPaused = false;
         }
     }
 }
