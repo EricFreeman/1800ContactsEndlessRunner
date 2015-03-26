@@ -22,19 +22,19 @@ namespace Assets.Scripts.Scene
             {
                 _spriteRenderer.color = Constants.TreeClosest;
                 _spriteRenderer.sortingOrder = (int)SpriteLayers.TreeForeground;
-                _speed = 3f;
+                _speed = 2f;
             }
             else if (layer == 1)
             {
                 _spriteRenderer.color = Constants.TreeMiddle;
                 _spriteRenderer.sortingOrder = (int)SpriteLayers.TreeBackground2;
-                _speed = 2f;
+                _speed = 1.25f;
             }
             else if (layer == 2)
             {
                 _spriteRenderer.color = Constants.TreeFurthestAway;
                 _spriteRenderer.sortingOrder = (int)SpriteLayers.TreeBackground1;
-                _speed = 1f;
+                _speed = .5f;
             }
         }
 
