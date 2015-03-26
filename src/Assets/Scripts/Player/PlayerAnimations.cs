@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts.Messages;
+using Assets.Scripts.Util;
 using UnityEngine;
+using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerAnimations : MonoBehaviour
+    public class PlayerAnimations : MonoBehaviour, IListener<StartPlayerAnimationMessage>
     {
-        public List<Sprite> Running;
+        public List<Sprite> RunAnimation;
 
         public int FrameDelay;
         private int _currentFrameDelay;
@@ -19,8 +22,10 @@ namespace Assets.Scripts.Player
         void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _currentAnimation = Running;
+            _currentAnimation = RunAnimation;
             _currentFrameDelay = FrameDelay;
+
+            this.Register<StartPlayerAnimationMessage>();
         }
 
         void Update()
@@ -38,11 +43,23 @@ namespace Assets.Scripts.Player
 
                     if (_isOneShot)
                     {
-                        _currentAnimation = Running;
+                        _currentAnimation = RunAnimation;
                     }
                 }
 
                 _spriteRenderer.sprite = _currentAnimation[_frame];
+            }
+        }
+
+        public void Handle(StartPlayerAnimationMessage message)
+        {
+            _isOneShot = message.IsOneShot;
+
+            switch (message.Animation)
+            {
+                case PlayerAnimation.Run :
+                    _currentAnimation = RunAnimation;
+                    break;
             }
         }
     }
