@@ -26,7 +26,7 @@ namespace Assets.Scripts.Player
             if (!_isJumping && Input.GetKeyDown(KeyCode.Space))
             {
                 _isJumping = true;
-                EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Jump });
+                EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.JumpUp });
             }
             else if (_isJumping)
             {
@@ -37,6 +37,7 @@ namespace Assets.Scripts.Player
                     if (transform.position == _jumpPinnacle || Input.GetKeyDown(KeyCode.Space))
                     {
                         _isFalling = true;
+                        EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.FallDown });
                     }
                 }
                 else

@@ -10,7 +10,8 @@ namespace Assets.Scripts.Player
     {
         public List<Sprite> DieAnimation;
         public List<Sprite> RunAnimation;
-        public List<Sprite> JumpAnimation; 
+        public List<Sprite> JumpUpAnimation;
+        public List<Sprite> FallDownAnimation; 
 
         public int FrameDelay;
         private int _currentFrameDelay;
@@ -72,9 +73,13 @@ namespace Assets.Scripts.Player
                 case PlayerAnimation.Run:
                     _currentAnimation = RunAnimation;
                     break;
-                case PlayerAnimation.Jump:
-                    _currentAnimation = JumpAnimation;
+                case PlayerAnimation.JumpUp:
+                    _currentAnimation = JumpUpAnimation;
                     break;
+                case PlayerAnimation.FallDown:
+                    _currentAnimation = FallDownAnimation;
+                    break;
+
             }
         }
 

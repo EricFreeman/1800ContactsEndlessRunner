@@ -4,7 +4,8 @@
     {
         Idle,
         Run,
-        Jump,
+        JumpUp,
+        FallDown,
         Die
     }
 
