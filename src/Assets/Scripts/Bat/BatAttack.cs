@@ -13,6 +13,10 @@ namespace Assets.Scripts.Bat
             if (_hasAttacked) return;
 
             EventAggregator.SendMessage(new PlayerTakeDamageMessage());
+            EventAggregator.SendMessage(new BatTakeBoxMessage { BatGameObject = gameObject});
+            
+            GetComponentInChildren<BatAnimations>().TakeBox();
+
             _hasAttacked = true;
         }
     }

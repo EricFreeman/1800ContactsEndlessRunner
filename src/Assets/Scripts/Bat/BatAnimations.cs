@@ -6,6 +6,7 @@ namespace Assets.Scripts.Bat
     public class BatAnimations : MonoBehaviour
     {
         public List<Sprite> IdleAnimation;
+        public List<Sprite> BoxAnimation; 
         
         public int FrameDelay;
         private int _currentFrameDelay;
@@ -38,6 +39,11 @@ namespace Assets.Scripts.Bat
 
                 _spriteRenderer.sprite = _currentAnimation[_frame];
             }
+        }
+
+        public void TakeBox()
+        {
+            _currentAnimation = BoxAnimation;
         }
     }
 }

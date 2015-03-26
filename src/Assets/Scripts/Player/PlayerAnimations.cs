@@ -6,8 +6,9 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerAnimations : MonoBehaviour, IListener<StartPlayerAnimationMessage>
+    public class PlayerAnimations : MonoBehaviour, IListener<StartPlayerAnimationMessage>, IListener<PlayerDiedMessage>
     {
+        public List<Sprite> DieAnimation;
         public List<Sprite> RunAnimation;
         public List<Sprite> JumpAnimation; 
 
@@ -27,6 +28,13 @@ namespace Assets.Scripts.Player
             _currentFrameDelay = FrameDelay;
 
             this.Register<StartPlayerAnimationMessage>();
+            this.Register<PlayerDiedMessage>();
+        }
+
+        void OnDestroy()
+        {
+            this.UnRegister<StartPlayerAnimationMessage>();
+            this.UnRegister<PlayerDiedMessage>();
         }
 
         void Update()
@@ -58,6 +66,9 @@ namespace Assets.Scripts.Player
 
             switch (message.Animation)
             {
+                case PlayerAnimation.Die:
+                    _currentAnimation = DieAnimation;
+                    break;
                 case PlayerAnimation.Run:
                     _currentAnimation = RunAnimation;
                     break;
@@ -65,6 +76,11 @@ namespace Assets.Scripts.Player
                     _currentAnimation = JumpAnimation;
                     break;
             }
+        }
+
+        public void Handle(PlayerDiedMessage message)
+        {
+            EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Die });
         }
     }
 }
