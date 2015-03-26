@@ -1,0 +1,41 @@
+﻿using Assets.Scripts.Messages;
+using UnityEngine;
+using UnityEventAggregator;
+
+namespace Assets.Scripts.UI
+{
+    public class HealthGui : MonoBehaviour, IListener<PlayerTakeDamageMessage>
+    {
+        public int Health = 3;
+        public GameObject HealthIconGameObject;
+        public Vector3 StartHealthIconPosition = new Vector3(-1.3f, .7f, 0);
+        public float DistanceBetweenIcon = .2f;
+
+        void Start()
+        {
+            this.Register<PlayerTakeDamageMessage>();
+
+            for (var i = 0; i < Health; i++)
+            {
+                var icon = Instantiate(HealthIconGameObject);
+                icon.transform.position = StartHealthIconPosition + new Vector3(DistanceBetweenIcon * i, 0, 0);
+                icon.transform.parent = transform;
+            }
+        }
+
+        void OnDestroy()
+        {
+            this.UnRegister<PlayerTakeDamageMessage>();
+        }
+
+        public void Handle(PlayerTakeDamageMessage message)
+        {
+            Health--;
+
+            if (Health == 0)
+            {
+                EventAggregator.SendMessage(new PlayerDiedMessage());
+            }
+        }
+    }
+}
