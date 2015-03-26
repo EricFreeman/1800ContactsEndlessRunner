@@ -9,6 +9,7 @@ namespace Assets.Scripts.Player
     public class PlayerAnimations : MonoBehaviour, IListener<StartPlayerAnimationMessage>
     {
         public List<Sprite> RunAnimation;
+        public List<Sprite> JumpAnimation; 
 
         public int FrameDelay;
         private int _currentFrameDelay;
@@ -57,8 +58,11 @@ namespace Assets.Scripts.Player
 
             switch (message.Animation)
             {
-                case PlayerAnimation.Run :
+                case PlayerAnimation.Run:
                     _currentAnimation = RunAnimation;
+                    break;
+                case PlayerAnimation.Jump:
+                    _currentAnimation = JumpAnimation;
                     break;
             }
         }

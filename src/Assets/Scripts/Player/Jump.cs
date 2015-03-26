@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Messages;
+using Assets.Scripts.Util;
+using UnityEngine;
+using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
@@ -18,11 +21,12 @@ namespace Assets.Scripts.Player
             _jumpPinnacle = transform.position + new Vector3(0, JumpHeight, 0);
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (!_isJumping && Input.GetKeyDown(KeyCode.Space))
             {
                 _isJumping = true;
+                EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Jump });
             }
 
             if (_isJumping)
@@ -44,6 +48,7 @@ namespace Assets.Scripts.Player
                     {
                         _isJumping = false;
                         _isFalling = false;
+                        EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Run });
                     }
                 }
             }
