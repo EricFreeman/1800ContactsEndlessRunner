@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Messages;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Messages;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -11,15 +13,19 @@ namespace Assets.Scripts.UI
         public Vector3 StartHealthIconPosition = new Vector3(-1.3f, .7f, 0);
         public float DistanceBetweenIcon = .2f;
 
+        public List<GameObject> HealthIcons; 
+
         void Start()
         {
             this.Register<PlayerTakeDamageMessage>();
 
+            HealthIcons = new List<GameObject>();
             for (var i = 0; i < Health; i++)
             {
                 var icon = Instantiate(HealthIconGameObject);
                 icon.transform.position = StartHealthIconPosition + new Vector3(DistanceBetweenIcon * i, 0, 0);
                 icon.transform.parent = transform;
+                HealthIcons.Add(icon);
             }
         }
 
@@ -31,6 +37,13 @@ namespace Assets.Scripts.UI
         public void Handle(PlayerTakeDamageMessage message)
         {
             Health--;
+
+            if (Health >= 0)
+            {
+                var last = HealthIcons.Last();
+                HealthIcons.Remove(last);
+                Destroy(last);
+            }
 
             if (Health == 0)
             {
