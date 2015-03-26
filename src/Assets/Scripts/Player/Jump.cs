@@ -21,7 +21,7 @@ namespace Assets.Scripts.Player
             _jumpPinnacle = transform.position + new Vector3(0, JumpHeight, 0);
         }
 
-        void FixedUpdate()
+        void Update()
         {
             if (!_isJumping && Input.GetKeyDown(KeyCode.Space))
             {
