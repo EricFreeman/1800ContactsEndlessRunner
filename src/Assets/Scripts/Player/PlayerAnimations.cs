@@ -11,7 +11,8 @@ namespace Assets.Scripts.Player
         public List<Sprite> DieAnimation;
         public List<Sprite> RunAnimation;
         public List<Sprite> JumpUpAnimation;
-        public List<Sprite> FallDownAnimation; 
+        public List<Sprite> FallDownAnimation;
+        public List<Sprite> DeadFallingAnimation; 
 
         public int FrameDelay;
         private int _currentFrameDelay;
@@ -79,13 +80,23 @@ namespace Assets.Scripts.Player
                 case PlayerAnimation.FallDown:
                     _currentAnimation = FallDownAnimation;
                     break;
+                case PlayerAnimation.DeadFalling:
+                    _currentAnimation = DeadFallingAnimation;
+                    break;
 
             }
         }
 
         public void Handle(PlayerDiedMessage message)
         {
-            EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Die });
+            if (_currentAnimation == JumpUpAnimation || _currentAnimation == FallDownAnimation)
+            {
+                EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.DeadFalling });
+            }
+            else
+            {
+                EventAggregator.SendMessage(new StartPlayerAnimationMessage {Animation = PlayerAnimation.Die});
+            }
         }
     }
 }

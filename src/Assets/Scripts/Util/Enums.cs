@@ -6,7 +6,8 @@
         Run,
         JumpUp,
         FallDown,
-        Die
+        Die,
+        DeadFalling
     }
 
     public enum SpriteLayers

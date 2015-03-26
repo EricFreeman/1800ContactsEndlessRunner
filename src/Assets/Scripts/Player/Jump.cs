@@ -5,7 +5,7 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class Jump : MonoBehaviour
+    public class Jump : MonoBehaviour, IListener<PlayerDiedMessage>
     {
         public float JumpHeight;
         public float JumpSpeed;
@@ -15,15 +15,24 @@ namespace Assets.Scripts.Player
         private Vector3 _basePosition;
         private Vector3 _jumpPinnacle;
 
+        private bool _isPlayerDead;
+
         void Start()
         {
             _basePosition = transform.position;
             _jumpPinnacle = transform.position + new Vector3(0, JumpHeight, 0);
+
+            this.Register<PlayerDiedMessage>();
+        }
+
+        void OnRegister()
+        {
+            this.UnRegister<PlayerDiedMessage>();
         }
 
         void Update()
         {
-            if (!_isJumping && Input.GetKeyDown(KeyCode.Space))
+            if (!_isJumping && Input.GetKeyDown(KeyCode.Space) && !_isPlayerDead)
             {
                 _isJumping = true;
                 EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.JumpUp });
@@ -48,9 +57,32 @@ namespace Assets.Scripts.Player
                     {
                         _isJumping = false;
                         _isFalling = false;
-                        EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.Run });
+
+                        if (_isPlayerDead)
+                        {
+                            EventAggregator.SendMessage(new StartPlayerAnimationMessage
+                            {
+                                Animation = PlayerAnimation.Die
+                            });
+                        }
+                        else
+                        {
+                            EventAggregator.SendMessage(new StartPlayerAnimationMessage
+                            {
+                                Animation = PlayerAnimation.Run
+                            });
+                        }
                     }
                 }
+            }
+        }
+
+        public void Handle(PlayerDiedMessage message)
+        {
+            _isPlayerDead = true;
+            if (_isJumping)
+            {
+                _isFalling = true;
             }
         }
     }
