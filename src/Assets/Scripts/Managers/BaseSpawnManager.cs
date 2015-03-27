@@ -49,6 +49,7 @@ namespace Assets.Scripts.Managers
         public void Handle(ResumeRunningMessage message)
         {
             _isPaused = false;
+            _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
         }
     }
 }

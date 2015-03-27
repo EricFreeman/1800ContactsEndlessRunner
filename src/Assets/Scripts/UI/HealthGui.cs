@@ -21,18 +21,7 @@ namespace Assets.Scripts.UI
         {
             this.Register<PlayerTakeDamageMessage>();
             this.Register<ResumeRunningMessage>();
-
-            HealthIcons = new List<GameObject>();
-            for (var i = 0; i < Health; i++)
-            {
-                var icon = Instantiate(HealthIconGameObject);
-                icon.transform.position = StartHealthIconPosition + new Vector3(DistanceBetweenIcon * i, 0, 0);
-                icon.transform.parent = transform;
-                HealthIcons.Add(icon);
-            }
-
-            transform.position = new Vector3(0, .2f, 0);
-        }
+        } 
 
         void OnDestroy()
         {
@@ -46,6 +35,21 @@ namespace Assets.Scripts.UI
             {
                 transform.position = Vector3.MoveTowards(transform.position, Vector3.zero, .25f * Time.deltaTime);
             }
+        }
+
+        private void Setup()
+        {
+            Health = 3;
+            HealthIcons = new List<GameObject>();
+            for (var i = 0; i < Health; i++)
+            {
+                var icon = Instantiate(HealthIconGameObject);
+                icon.transform.position = StartHealthIconPosition + new Vector3(DistanceBetweenIcon * i, 0, 0);
+                icon.transform.parent = transform;
+                HealthIcons.Add(icon);
+            }
+
+            transform.position = new Vector3(0, .2f, 0);
         }
 
         public void Handle(PlayerTakeDamageMessage message)
@@ -68,6 +72,7 @@ namespace Assets.Scripts.UI
 
         public void Handle(ResumeRunningMessage message)
         {
+            Setup();
             _isRunning = true;
         }
     }
