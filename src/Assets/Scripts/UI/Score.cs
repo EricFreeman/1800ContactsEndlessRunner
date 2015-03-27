@@ -5,7 +5,7 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.UI
 {
-    public class Score : MonoBehaviour, IListener<ResumeRunningMessage>, IListener<PlayerDiedMessage>
+    public class Score : MonoBehaviour, IListener<ResumeRunningMessage>, IListener<PlayerDiedMessage>, IListener<EarnPointsMessage>
     {
         private int _score;
 
@@ -17,12 +17,14 @@ namespace Assets.Scripts.UI
         {
             this.Register<ResumeRunningMessage>();
             this.Register<PlayerDiedMessage>();
+            this.Register<EarnPointsMessage>();
         }
 
         void OnDestroy()
         {
             this.UnRegister<ResumeRunningMessage>();
             this.UnRegister<PlayerDiedMessage>();
+            this.UnRegister<EarnPointsMessage>();
         }
 
         void Update()
@@ -43,6 +45,11 @@ namespace Assets.Scripts.UI
         public void Handle(PlayerDiedMessage message)
         {
             _isRunning = false;
+        }
+
+        public void Handle(EarnPointsMessage message)
+        {
+            _score += message.Points;
         }
     }
 }
