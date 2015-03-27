@@ -41,7 +41,7 @@ namespace Assets.Scripts.Customer
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.gameObject.name == "Player" && !_isHappy)
+            if (col.gameObject.name == "Player" && !_isHappy && !_isPaused)
             {
                 _isHappy = true;
                 GetComponent<AudioSource>().clip = HappyMessage[_index];
