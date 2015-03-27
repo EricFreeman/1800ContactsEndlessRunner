@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Messages;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Messages;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -6,12 +7,13 @@ namespace Assets.Scripts.Customer
 {
     public class Customer : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
-        public Sprite Standing;
-        public Sprite Happy;
-
-        private bool _isHappy;
+        public List<Sprite> Standing;
+        public List<Sprite> Happy;
+        public List<AudioClip> HappyMessage;
 
         public float Speed = 2f;
+        private bool _isHappy;
+        private int _index;
 
         private bool _isPaused;
 
@@ -19,6 +21,9 @@ namespace Assets.Scripts.Customer
         {
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
+
+            _index = Random.Range(0, Standing.Count);
+            GetComponent<SpriteRenderer>().sprite = Standing[_index];
         }
 
         void OnDestroy()
@@ -39,8 +44,9 @@ namespace Assets.Scripts.Customer
             if (col.gameObject.name == "Player" && !_isHappy)
             {
                 _isHappy = true;
+                GetComponent<AudioSource>().clip = HappyMessage[_index];
                 GetComponent<AudioSource>().Play();
-                GetComponent<SpriteRenderer>().sprite = Happy;
+                GetComponent<SpriteRenderer>().sprite = Happy[_index];
                 EventAggregator.SendMessage(new EarnPointsMessage { Points = 1000 });
             }
         }
