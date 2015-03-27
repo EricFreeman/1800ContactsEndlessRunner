@@ -37,6 +37,11 @@ namespace Assets.Scripts.Player
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+
             if (_isPlayerDead)
             {
                 if (InputManager.IsPressed() && Time.fixedTime - _deathTime > 1)
