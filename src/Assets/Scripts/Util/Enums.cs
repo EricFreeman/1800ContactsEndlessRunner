@@ -21,6 +21,7 @@
         Player,
         Enemies,
         Grass,
+        ShrubsForeground,
         Ui
     }
 
