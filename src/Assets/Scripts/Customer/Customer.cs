@@ -39,6 +39,7 @@ namespace Assets.Scripts.Customer
             if (col.gameObject.name == "Player" && !_isHappy)
             {
                 _isHappy = true;
+                GetComponent<AudioSource>().Play();
                 GetComponent<SpriteRenderer>().sprite = Happy;
                 EventAggregator.SendMessage(new EarnPointsMessage { Points = 1000 });
             }
