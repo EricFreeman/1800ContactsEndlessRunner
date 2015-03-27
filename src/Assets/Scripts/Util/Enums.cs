@@ -16,6 +16,7 @@
         TreeBackground1,
         TreeBackground2,
         TreeForeground,
+        Customer,
         Player,
         Enemies,
         Grass,

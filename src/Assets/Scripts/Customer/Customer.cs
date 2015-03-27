@@ -2,21 +2,21 @@
 using UnityEngine;
 using UnityEventAggregator;
 
-namespace Assets.Scripts.Managers
+namespace Assets.Scripts.Customer
 {
-    public class TreeManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
+    public class Customer : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
-        public GameObject TreeGameObject;
-        public int MinTreeSpawnDelay;
-        public int MaxTreeSpawnDelay;
-        private int _currentTreeSpawnDelay;
+        public Sprite Standing;
+        public Sprite Happy;
+
+        private bool _isHappy;
+
+        public float Speed = 2.5f;
 
         private bool _isPaused;
 
         void Start()
         {
-            _currentTreeSpawnDelay = Random.Range(MinTreeSpawnDelay, MaxTreeSpawnDelay);
-
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
         }
@@ -31,13 +31,16 @@ namespace Assets.Scripts.Managers
         {
             if (_isPaused) return;
 
-            _currentTreeSpawnDelay--;
+            transform.Translate(-Speed * Time.deltaTime, 0, 0);
+        }
 
-            if (_currentTreeSpawnDelay <= 0)
+        void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.gameObject.name == "Player" && !_isHappy)
             {
-                _currentTreeSpawnDelay = Random.Range(MinTreeSpawnDelay, MaxTreeSpawnDelay);
-
-                Instantiate(TreeGameObject);
+                _isHappy = true;
+                GetComponent<SpriteRenderer>().sprite = Happy;
+                EventAggregator.SendMessage(new EarnPointsMessage { Points = 1000 });
             }
         }
 
@@ -49,6 +52,7 @@ namespace Assets.Scripts.Managers
         public void Handle(ResumeRunningMessage message)
         {
             _isPaused = false;
+            Destroy(gameObject);
         }
     }
 }

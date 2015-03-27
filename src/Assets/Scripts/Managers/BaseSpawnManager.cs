@@ -4,25 +4,24 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Managers
 {
-    public class BatManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
+    public class BaseSpawnManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
     {
+        public GameObject SpawnableGameObject;
         public int MinSpawnDelay;
         public int MaxSpawnDelay;
-
         private int _currentSpawnDelay;
-
-        public GameObject BatGameObject;
 
         private bool _isPaused;
 
         void Start()
         {
             _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
+
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             this.UnRegister<PauseRunningMessage>();
             this.UnRegister<ResumeRunningMessage>();
@@ -38,7 +37,7 @@ namespace Assets.Scripts.Managers
             {
                 _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
 
-                Instantiate(BatGameObject);
+                Instantiate(SpawnableGameObject);
             }
         }
 
