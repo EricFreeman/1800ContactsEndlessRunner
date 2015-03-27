@@ -15,6 +15,8 @@ namespace Assets.Scripts.Player
         private Vector3 _basePosition;
         private Vector3 _jumpPinnacle;
 
+        public AudioClip JumpAudio;
+
         private bool _isPlayerDead;
         private float _deathTime;
 
@@ -48,7 +50,10 @@ namespace Assets.Scripts.Player
             else if (!_isJumping && Input.GetKeyDown(KeyCode.Space) && !_isPlayerDead)
             {
                 _isJumping = true;
+
                 EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.JumpUp });
+
+                AudioSource.PlayClipAtPoint(JumpAudio, Vector3.zero);
             }
             else if (_isJumping)
             {
