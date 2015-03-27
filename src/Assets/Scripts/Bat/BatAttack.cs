@@ -6,6 +6,8 @@ namespace Assets.Scripts.Bat
 {
     public class BatAttack : MonoBehaviour, IListener<PlayerDiedMessage>
     {
+        public AudioClip Hit;
+
         private bool _hasAttacked;
 
         void Start()
@@ -22,6 +24,7 @@ namespace Assets.Scripts.Bat
         {
             if (_hasAttacked) return;
 
+            AudioSource.PlayClipAtPoint(Hit, Vector3.zero);
             EventAggregator.SendMessage(new PlayerTakeDamageMessage());
             EventAggregator.SendMessage(new BatTakeBoxMessage { BatGameObject = gameObject});
             

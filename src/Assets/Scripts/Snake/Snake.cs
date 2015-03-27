@@ -10,6 +10,7 @@ namespace Assets.Scripts.Snake
         public List<Sprite> SnakeMoving;
         public List<Sprite> SnakeEating;
         public int AnimationSpeed = 4;
+        public AudioClip HitSound;
 
         private List<Sprite> _currentAnimation; 
         private int _currentAnimationSpeed;
@@ -33,12 +34,12 @@ namespace Assets.Scripts.Snake
             if (_currentAnimationSpeed <= 0)
             {
                 _currentAnimationSpeed = AnimationSpeed;
-            }
 
-            _currentFrame++;
-            if (_currentFrame >= _currentAnimation.Count)
-            {
-                _currentFrame = 0;
+                _currentFrame++;
+                if (_currentFrame >= _currentAnimation.Count)
+                {
+                    _currentFrame = 0;
+                }
             }
 
             GetComponentInChildren<SpriteRenderer>().sprite = _currentAnimation[_currentFrame];
@@ -55,6 +56,7 @@ namespace Assets.Scripts.Snake
         {
             if (col.gameObject.name == "Player" && !_hasAttackedPlayer)
             {
+                AudioSource.PlayClipAtPoint(HitSound, Vector3.zero);
                 EventAggregator.SendMessage(new PlayerTakeDamageMessage());
                 _hasAttackedPlayer = true;
                 _currentAnimation = SnakeEating;
