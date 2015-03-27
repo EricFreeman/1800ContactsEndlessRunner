@@ -5,10 +5,10 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class Jump : MonoBehaviour, IListener<PlayerDiedMessage>
+    public class Player : MonoBehaviour, IListener<PlayerDiedMessage>
     {
-        public float JumpHeight;
-        public float JumpSpeed;
+        public float JumpHeight = .75f;
+        public float JumpSpeed = 2;
 
         private bool _isJumping;
         private bool _isFalling;
@@ -32,7 +32,19 @@ namespace Assets.Scripts.Player
 
         void Update()
         {
-            if (!_isJumping && Input.GetKeyDown(KeyCode.Space) && !_isPlayerDead)
+            if (_isPlayerDead)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    _isPlayerDead = false;
+                    EventAggregator.SendMessage(new ResumeRunningMessage());
+                    EventAggregator.SendMessage(new StartPlayerAnimationMessage
+                    {
+                        Animation = PlayerAnimation.Run
+                    });
+                }
+            }
+            else if (!_isJumping && Input.GetKeyDown(KeyCode.Space) && !_isPlayerDead)
             {
                 _isJumping = true;
                 EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.JumpUp });
