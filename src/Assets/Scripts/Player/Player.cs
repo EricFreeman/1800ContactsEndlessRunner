@@ -44,7 +44,7 @@ namespace Assets.Scripts.Player
 
             if (_isPlayerDead)
             {
-                if (InputManager.IsPressed() && Time.fixedTime - _deathTime > 1)
+                if (InputManager.IsPressedOnLeftSideOfScreen() && Time.fixedTime - _deathTime > 1)
                 {
                     _isPlayerDead = false;
                     EventAggregator.SendMessage(new ResumeRunningMessage());
