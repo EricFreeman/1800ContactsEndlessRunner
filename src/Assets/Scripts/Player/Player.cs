@@ -61,29 +61,30 @@ namespace Assets.Scripts.Player
                         EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.FallDown });
                     }
                 }
-                else
+            }
+
+            if (_isFalling)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, _basePosition, JumpSpeed * Time.deltaTime);
+
+                if (transform.position == _basePosition)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, _basePosition, JumpSpeed * Time.deltaTime);
+                    _isJumping = false;
+                    _isFalling = false;
 
-                    if (transform.position == _basePosition)
+                    if (_isPlayerDead)
                     {
-                        _isJumping = false;
-                        _isFalling = false;
-
-                        if (_isPlayerDead)
+                        EventAggregator.SendMessage(new StartPlayerAnimationMessage
                         {
-                            EventAggregator.SendMessage(new StartPlayerAnimationMessage
-                            {
-                                Animation = PlayerAnimation.Die
-                            });
-                        }
-                        else
+                            Animation = PlayerAnimation.Die
+                        });
+                    }
+                    else
+                    {
+                        EventAggregator.SendMessage(new StartPlayerAnimationMessage
                         {
-                            EventAggregator.SendMessage(new StartPlayerAnimationMessage
-                            {
-                                Animation = PlayerAnimation.Run
-                            });
-                        }
+                            Animation = PlayerAnimation.Run
+                        });
                     }
                 }
             }
