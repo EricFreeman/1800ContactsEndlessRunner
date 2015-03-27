@@ -16,6 +16,7 @@ namespace Assets.Scripts.Player
         private Vector3 _jumpPinnacle;
 
         private bool _isPlayerDead;
+        private float _deathTime;
 
         void Start()
         {
@@ -34,7 +35,7 @@ namespace Assets.Scripts.Player
         {
             if (_isPlayerDead)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && Time.fixedTime - _deathTime > 1)
                 {
                     _isPlayerDead = false;
                     EventAggregator.SendMessage(new ResumeRunningMessage());
@@ -93,6 +94,7 @@ namespace Assets.Scripts.Player
         public void Handle(PlayerDiedMessage message)
         {
             _isPlayerDead = true;
+            _deathTime = Time.fixedTime;
             if (_isJumping)
             {
                 _isFalling = true;
