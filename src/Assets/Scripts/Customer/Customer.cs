@@ -11,7 +11,7 @@ namespace Assets.Scripts.Customer
 
         private bool _isHappy;
 
-        public float Speed = 2.5f;
+        public float Speed = 2f;
 
         private bool _isPaused;
 
