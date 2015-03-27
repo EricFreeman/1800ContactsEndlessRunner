@@ -6,10 +6,14 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerAnimations : MonoBehaviour, IListener<StartPlayerAnimationMessage>, IListener<PlayerDiedMessage>
+    public class PlayerAnimations : MonoBehaviour, 
+        IListener<StartPlayerAnimationMessage>, 
+        IListener<ResumeRunningMessage>, 
+        IListener<PlayerDiedMessage>
     {
-        public List<Sprite> DieAnimation;
+        public List<Sprite> IdleAnimation; 
         public List<Sprite> RunAnimation;
+        public List<Sprite> DieAnimation;
         public List<Sprite> JumpUpAnimation;
         public List<Sprite> FallDownAnimation;
         public List<Sprite> DeadFallingAnimation; 
@@ -26,7 +30,7 @@ namespace Assets.Scripts.Player
         void Start()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _currentAnimation = RunAnimation;
+            _currentAnimation = IdleAnimation;
             _currentFrameDelay = FrameDelay;
 
             this.Register<StartPlayerAnimationMessage>();
@@ -68,6 +72,9 @@ namespace Assets.Scripts.Player
 
             switch (message.Animation)
             {
+                case PlayerAnimation.Idle:
+                    _currentAnimation = IdleAnimation;
+                    break;
                 case PlayerAnimation.Die:
                     _currentAnimation = DieAnimation;
                     break;
@@ -83,8 +90,12 @@ namespace Assets.Scripts.Player
                 case PlayerAnimation.DeadFalling:
                     _currentAnimation = DeadFallingAnimation;
                     break;
-
             }
+        }
+
+        public void Handle(ResumeRunningMessage message)
+        {
+            _currentAnimation = RunAnimation;
         }
 
         public void Handle(PlayerDiedMessage message)

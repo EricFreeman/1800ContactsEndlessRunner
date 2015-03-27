@@ -13,7 +13,7 @@ namespace Assets.Scripts.Managers
 
         public GameObject BatGameObject;
 
-        private bool _isPaused;
+        private bool _isPaused = true;
 
         void Start()
         {

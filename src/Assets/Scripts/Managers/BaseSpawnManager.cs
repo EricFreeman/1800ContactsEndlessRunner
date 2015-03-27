@@ -11,7 +11,7 @@ namespace Assets.Scripts.Managers
         public int MaxSpawnDelay;
         private int _currentSpawnDelay;
 
-        private bool _isPaused;
+        private bool _isPaused = true;
 
         void Start()
         {

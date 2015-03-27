@@ -9,7 +9,7 @@ namespace Assets.Scripts.Scene
         public float Length;
         public float Speed;
 
-        private bool _isPaused;
+        private bool _isPaused = true;
 
         void Start()
         {

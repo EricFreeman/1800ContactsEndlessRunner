@@ -46,9 +46,12 @@ namespace Assets.Scripts.Managers
 
         public void Handle(ResumeRunningMessage message)
         {
-            _isMusicPaused = false;
-            _audioSource.clip = Main;
-            _audioSource.Play();
+            if (_isMusicPaused)
+            {
+                _isMusicPaused = false;
+                _audioSource.clip = Main;
+                _audioSource.Play();
+            }
         }
     }
 }
