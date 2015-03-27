@@ -14,6 +14,7 @@
     {
         Background,
         TreeBackground1,
+        ShrubsBackground,
         TreeBackground2,
         TreeForeground,
         Customer,
