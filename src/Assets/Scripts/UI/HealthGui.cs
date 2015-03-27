@@ -10,10 +10,8 @@ namespace Assets.Scripts.UI
     {
         public int Health = 3;
         public GameObject HealthIconGameObject;
-        public Vector3 StartHealthIconPosition = new Vector3(-1.3f, .7f, 0);
-        public float DistanceBetweenIcon = .2f;
 
-        public List<GameObject> HealthIcons;
+        private List<GameObject> _healthIcons;
 
         public bool _isRunning;
 
@@ -29,27 +27,16 @@ namespace Assets.Scripts.UI
             this.UnRegister<ResumeRunningMessage>();
         }
 
-        void Update()
-        {
-            if (_isRunning)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, Vector3.zero, .25f * Time.deltaTime);
-            }
-        }
-
         private void Setup()
         {
             Health = 3;
-            HealthIcons = new List<GameObject>();
+            _healthIcons = new List<GameObject>();
             for (var i = 0; i < Health; i++)
             {
                 var icon = Instantiate(HealthIconGameObject);
-                icon.transform.position = StartHealthIconPosition + new Vector3(DistanceBetweenIcon * i, 0, 0);
-                icon.transform.parent = transform;
-                HealthIcons.Add(icon);
+                icon.transform.SetParent(transform, false);
+                _healthIcons.Add(icon);
             }
-
-            transform.position = new Vector3(0, .2f, 0);
         }
 
         public void Handle(PlayerTakeDamageMessage message)
@@ -58,8 +45,8 @@ namespace Assets.Scripts.UI
 
             if (Health >= 0)
             {
-                var last = HealthIcons.Last();
-                HealthIcons.Remove(last);
+                var last = _healthIcons.Last();
+                _healthIcons.Remove(last);
                 Destroy(last);
             }
 
