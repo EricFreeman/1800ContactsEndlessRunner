@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Messages;
+﻿using System.Linq;
+using Assets.Scripts.Managers;
+using Assets.Scripts.Messages;
 using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEventAggregator;
@@ -37,7 +39,7 @@ namespace Assets.Scripts.Player
         {
             if (_isPlayerDead)
             {
-                if (Input.GetKeyDown(KeyCode.Space) && Time.fixedTime - _deathTime > 1)
+                if (InputManager.IsPressed() && Time.fixedTime - _deathTime > 1)
                 {
                     _isPlayerDead = false;
                     EventAggregator.SendMessage(new ResumeRunningMessage());
@@ -47,7 +49,7 @@ namespace Assets.Scripts.Player
                     });
                 }
             }
-            else if (!_isJumping && Input.GetKeyDown(KeyCode.Space) && !_isPlayerDead)
+            else if (!_isJumping && InputManager.IsPressed() && !_isPlayerDead)
             {
                 _isJumping = true;
 
@@ -61,7 +63,7 @@ namespace Assets.Scripts.Player
                 {
                     transform.position = Vector3.MoveTowards(transform.position, _jumpPinnacle, JumpSpeed * Time.deltaTime);
 
-                    if (transform.position == _jumpPinnacle || Input.GetKeyDown(KeyCode.Space))
+                    if (transform.position == _jumpPinnacle || InputManager.IsPressed())
                     {
                         _isFalling = true;
                         EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.FallDown });

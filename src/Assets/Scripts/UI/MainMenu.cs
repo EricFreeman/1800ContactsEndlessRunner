@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Messages;
+﻿using Assets.Scripts.Managers;
+using Assets.Scripts.Messages;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -47,7 +48,7 @@ namespace Assets.Scripts.UI
                 GetComponent<SpriteRenderer>().sprite = spriteToUse;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && !_isPlaying)
+            if (InputManager.IsPressed() && !_isPlaying)
             {
                 _isPlaying = true;
                 GetComponent<SpriteRenderer>().sprite = Logo;
