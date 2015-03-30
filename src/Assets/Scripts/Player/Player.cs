@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using Assets.Scripts.Managers;
+﻿using Assets.Scripts.Managers;
 using Assets.Scripts.Messages;
-using Assets.Scripts.Util;
+using Assets.Scripts.Shared;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -22,10 +21,17 @@ namespace Assets.Scripts.Player
         private bool _isPlayerDead;
         private float _deathTime;
 
+        private AnimationController _animationController;
+        public PlayerAnimations _animations;
+
         void Start()
         {
             _basePosition = transform.position;
             _jumpPinnacle = transform.position + new Vector3(0, JumpHeight, 0);
+            _animationController = GetComponent<AnimationController>();
+            _animations = GetComponent<PlayerAnimations>();
+
+            _animationController.PlayAnimation(_animations.IdleAnimation);
 
             this.Register<PlayerDiedMessage>();
         }
@@ -48,18 +54,13 @@ namespace Assets.Scripts.Player
                 {
                     _isPlayerDead = false;
                     EventAggregator.SendMessage(new ResumeRunningMessage());
-                    EventAggregator.SendMessage(new StartPlayerAnimationMessage
-                    {
-                        Animation = PlayerAnimation.Run
-                    });
+                    _animationController.PlayAnimation(_animations.RunAnimation);
                 }
             }
             else if (!_isJumping && InputManager.IsPressed() && !_isPlayerDead)
             {
                 _isJumping = true;
-
-                EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.JumpUp });
-
+                _animationController.PlayAnimation(_animations.JumpUpAnimation);
                 AudioSource.PlayClipAtPoint(JumpAudio, Vector3.zero);
             }
             else if (_isJumping)
@@ -71,7 +72,7 @@ namespace Assets.Scripts.Player
                     if (transform.position == _jumpPinnacle || InputManager.IsPressed())
                     {
                         _isFalling = true;
-                        EventAggregator.SendMessage(new StartPlayerAnimationMessage { Animation = PlayerAnimation.FallDown });
+                        _animationController.PlayAnimation(_animations.FallDownAnimation);
                     }
                 }
             }
@@ -87,17 +88,11 @@ namespace Assets.Scripts.Player
 
                     if (_isPlayerDead)
                     {
-                        EventAggregator.SendMessage(new StartPlayerAnimationMessage
-                        {
-                            Animation = PlayerAnimation.Die
-                        });
+                        _animationController.PlayAnimation(_animations.DieAnimation);
                     }
                     else
                     {
-                        EventAggregator.SendMessage(new StartPlayerAnimationMessage
-                        {
-                            Animation = PlayerAnimation.Run
-                        });
+                        _animationController.PlayAnimation(_animations.RunAnimation);
                     }
                 }
             }
@@ -110,6 +105,11 @@ namespace Assets.Scripts.Player
             if (_isJumping)
             {
                 _isFalling = true;
+                _animationController.PlayAnimation(_animations.DeadFallingAnimation);
+            }
+            else
+            {
+                _animationController.PlayAnimation(_animations.DieAnimation);
             }
         }
     }

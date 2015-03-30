@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Shared
 {
     public class AnimationController : MonoBehaviour
     {
+        public SpriteRenderer SpriteRenderer;
+
         private List<Sprite> _currentAnimation;
         private List<Sprite> _previousAnimation; 
 
@@ -15,13 +18,15 @@ namespace Assets.Scripts.Shared
 
         void Update()
         {
+            if (_currentAnimation == null) return;
+
             _timeOnFrame += Time.deltaTime;
-            if (_timeOnFrame >= FramesPerSeconds/60)
+            if (_timeOnFrame >= 1.0 / FramesPerSeconds)
             {
                 _timeOnFrame = 0;
                 _currentFrame++;
 
-                if (_currentFrame >= _currentAnimation.Count)
+                if (_currentFrame >= _currentAnimation.Count - 1)
                 {
                     _currentFrame = 0;
                     if (_previousAnimation != null)
@@ -31,13 +36,17 @@ namespace Assets.Scripts.Shared
                     }
                 }
             }
-
-            GetComponent<SpriteRenderer>().sprite = _currentAnimation[_currentFrame];
+            
+            SpriteRenderer.sprite = _currentAnimation[_currentFrame];
         }
 
-        public void PlayAnimation(List<Sprite> anim, bool isOneShot)
+        public void PlayAnimation(List<Sprite> anim, bool isOneShot = false)
         {
-            if (isOneShot) _previousAnimation = _currentAnimation;
+            if (isOneShot)
+            {
+                _previousAnimation = _currentAnimation;
+            }
+
             _currentAnimation = anim;
         }
     }
