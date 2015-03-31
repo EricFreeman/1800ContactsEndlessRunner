@@ -13,6 +13,7 @@ namespace Assets.Scripts.Bat
         void Start()
         {
             this.Register<PlayerDiedMessage>();
+
         }
 
         void OnDestroy()
@@ -28,8 +29,6 @@ namespace Assets.Scripts.Bat
             EventAggregator.SendMessage(new PlayerTakeDamageMessage());
             EventAggregator.SendMessage(new BatTakeBoxMessage { BatGameObject = gameObject});
             
-            GetComponentInChildren<BatAnimations>().TakeBox();
-
             _hasAttacked = true;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Assets.Scripts.Messages;
+using Assets.Scripts.Shared;
 using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEventAggregator;
@@ -9,11 +10,18 @@ namespace Assets.Scripts.Bat
 {
     public class BatMovement : MonoBehaviour, IListener<BatTakeBoxMessage>
     {
+        private AnimationController _animationController;
+
         private BatMovementTypes _movementType;
+        private BatAnimations _batAnimations;
         private bool _hasTakenBox;
 
         void Start()
         {
+            _animationController = GetComponent<AnimationController>();
+            _batAnimations = GetComponent<BatAnimations>();
+
+            _animationController.PlayAnimation(_batAnimations.IdleAnimation);
             _movementType = (BatMovementTypes)Random.Range(0, Enum.GetValues(typeof(BatMovementTypes)).Length);
 
             if (_movementType != BatMovementTypes.Hover)
@@ -66,6 +74,7 @@ namespace Assets.Scripts.Bat
             if (message.BatGameObject == gameObject)
             {
                 _hasTakenBox = true;
+                _animationController.PlayAnimation(_batAnimations.BoxAnimation);
             }
         }
     }

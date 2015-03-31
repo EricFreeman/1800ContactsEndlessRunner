@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Shared
@@ -36,7 +35,7 @@ namespace Assets.Scripts.Shared
                     }
                 }
             }
-            
+
             SpriteRenderer.sprite = _currentAnimation[_currentFrame];
         }
 
@@ -48,6 +47,7 @@ namespace Assets.Scripts.Shared
             }
 
             _currentAnimation = anim;
+            _currentFrame = 0;
         }
     }
 }
