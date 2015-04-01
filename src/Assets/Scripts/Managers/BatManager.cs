@@ -4,7 +4,7 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Managers
 {
-    public class BatManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
+    public class BatManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>, IListener<DelaySpawnMessage>
     {
         public int MinSpawnDelay;
         public int MaxSpawnDelay;
@@ -20,12 +20,14 @@ namespace Assets.Scripts.Managers
             _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
+            this.Register<DelaySpawnMessage>();
         }
 
         private void OnDestroy()
         {
             this.UnRegister<PauseRunningMessage>();
             this.UnRegister<ResumeRunningMessage>();
+            this.UnRegister<DelaySpawnMessage>();
         }
 
         void Update()
@@ -39,6 +41,7 @@ namespace Assets.Scripts.Managers
                 _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
 
                 Instantiate(BatGameObject);
+                EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = 25, IsEnemyDelay = true, Threshold = 50 });
             }
         }
 
@@ -51,6 +54,14 @@ namespace Assets.Scripts.Managers
         {
             _isPaused = false;
             _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
+        }
+
+        public void Handle(DelaySpawnMessage message)
+        {
+            if (_currentSpawnDelay <= message.Threshold)
+            {
+                _currentSpawnDelay += message.DelayTime;
+            }
         }
     }
 }

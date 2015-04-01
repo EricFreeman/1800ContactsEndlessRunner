@@ -4,11 +4,13 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Managers
 {
-    public class BaseSpawnManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>
+    public class BaseSpawnManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>, IListener<DelaySpawnMessage>
     {
         public GameObject SpawnableGameObject;
         public int MinSpawnDelay;
         public int MaxSpawnDelay;
+        public bool IsEnemy;
+
         private int _currentSpawnDelay;
 
         private bool _isPaused = true;
@@ -19,12 +21,14 @@ namespace Assets.Scripts.Managers
 
             this.Register<PauseRunningMessage>();
             this.Register<ResumeRunningMessage>();
+            this.Register<DelaySpawnMessage>();
         }
 
         void OnDestroy()
         {
             this.UnRegister<PauseRunningMessage>();
             this.UnRegister<ResumeRunningMessage>();
+            this.UnRegister<DelaySpawnMessage>();
         }
 
         void Update()
@@ -38,6 +42,11 @@ namespace Assets.Scripts.Managers
                 _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
 
                 Instantiate(SpawnableGameObject);
+
+                if (IsEnemy)
+                {
+                    EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = 25, IsEnemyDelay = true, Threshold = 50 });
+                }
             }
         }
 
@@ -50,6 +59,14 @@ namespace Assets.Scripts.Managers
         {
             _isPaused = false;
             _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
+        }
+
+        public void Handle(DelaySpawnMessage message)
+        {
+            if ((!message.IsEnemyDelay || IsEnemy) && _currentSpawnDelay <= message.Threshold)
+            {
+                _currentSpawnDelay += message.DelayTime;
+            }
         }
     }
 }
