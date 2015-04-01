@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Messages;
+using Assets.Scripts.Shared;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -9,10 +10,10 @@ namespace Assets.Scripts.Snake
     {
         public List<Sprite> SnakeMoving;
         public List<Sprite> SnakeEating;
-        public int AnimationSpeed = 4;
         public AudioClip HitSound;
 
-        private List<Sprite> _currentAnimation; 
+        private AnimationController _animationController;
+
         private int _currentAnimationSpeed;
         private int _currentFrame;
         private bool _hasAttackedPlayer;
@@ -20,7 +21,8 @@ namespace Assets.Scripts.Snake
         void Start()
         {
             this.Register<PlayerDiedMessage>();
-            _currentAnimation = SnakeMoving;
+            _animationController = GetComponent<AnimationController>();
+            _animationController.PlayAnimation(SnakeMoving);
         }
 
         void OnDestroy()
@@ -30,21 +32,7 @@ namespace Assets.Scripts.Snake
 
         private void Update()
         {
-            _currentAnimationSpeed--;
-            if (_currentAnimationSpeed <= 0)
-            {
-                _currentAnimationSpeed = AnimationSpeed;
-
-                _currentFrame++;
-                if (_currentFrame >= _currentAnimation.Count)
-                {
-                    _currentFrame = 0;
-                }
-            }
-
-            GetComponentInChildren<SpriteRenderer>().sprite = _currentAnimation[_currentFrame];
-
-            transform.Translate(-2*Time.deltaTime, 0, 0);
+            transform.Translate(-2.5f * Time.deltaTime, 0, 0);
 
             if (transform.position.x <= -2)
             {
@@ -59,7 +47,7 @@ namespace Assets.Scripts.Snake
                 AudioSource.PlayClipAtPoint(HitSound, Vector3.zero);
                 EventAggregator.SendMessage(new PlayerTakeDamageMessage());
                 _hasAttackedPlayer = true;
-                _currentAnimation = SnakeEating;
+                _animationController.PlayAnimation(SnakeEating);
             }
         }
 

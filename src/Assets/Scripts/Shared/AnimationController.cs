@@ -25,7 +25,7 @@ namespace Assets.Scripts.Shared
                 _timeOnFrame = 0;
                 _currentFrame++;
 
-                if (_currentFrame >= _currentAnimation.Count - 1)
+                if (_currentFrame >= _currentAnimation.Count)
                 {
                     _currentFrame = 0;
                     if (_previousAnimation != null)
