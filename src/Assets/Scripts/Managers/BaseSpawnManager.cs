@@ -7,11 +7,11 @@ namespace Assets.Scripts.Managers
     public class BaseSpawnManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>, IListener<DelaySpawnMessage>
     {
         public GameObject SpawnableGameObject;
-        public int MinSpawnDelay;
-        public int MaxSpawnDelay;
+        public float MinSpawnDelay;
+        public float MaxSpawnDelay;
         public bool IsEnemy;
 
-        private int _currentSpawnDelay;
+        private float _currentSpawnDelay;
 
         private bool _isPaused = true;
 
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Managers
         {
             if (_isPaused) return;
 
-            _currentSpawnDelay--;
+            _currentSpawnDelay -= Time.deltaTime;
 
             if (_currentSpawnDelay <= 0)
             {
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Managers
 
                 if (IsEnemy)
                 {
-                    EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = 25, IsEnemyDelay = true, Threshold = 50 });
+                    EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = .5f, IsEnemyDelay = true, Threshold = 1 });
                 }
             }
         }

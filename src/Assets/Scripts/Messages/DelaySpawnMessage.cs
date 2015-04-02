@@ -2,8 +2,8 @@
 {
     public class DelaySpawnMessage
     {
-        public int DelayTime;
-        public bool IsEnemyDelay;
-        public int Threshold { get; set; }
+        public float DelayTime { get; set; }
+        public bool IsEnemyDelay { get; set; }
+        public float Threshold { get; set; }
     }
 }

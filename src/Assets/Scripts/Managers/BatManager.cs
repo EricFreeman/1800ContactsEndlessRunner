@@ -6,10 +6,10 @@ namespace Assets.Scripts.Managers
 {
     public class BatManager : MonoBehaviour, IListener<PauseRunningMessage>, IListener<ResumeRunningMessage>, IListener<DelaySpawnMessage>
     {
-        public int MinSpawnDelay;
-        public int MaxSpawnDelay;
+        public float MinSpawnDelay;
+        public float MaxSpawnDelay;
 
-        private int _currentSpawnDelay;
+        private float _currentSpawnDelay;
 
         public GameObject BatGameObject;
 
@@ -34,14 +34,14 @@ namespace Assets.Scripts.Managers
         {
             if (_isPaused) return;
 
-            _currentSpawnDelay--;
+            _currentSpawnDelay -= Time.deltaTime;
 
             if (_currentSpawnDelay <= 0)
             {
                 _currentSpawnDelay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
 
                 Instantiate(BatGameObject);
-                EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = 25, IsEnemyDelay = true, Threshold = 50 });
+                EventAggregator.SendMessage(new DelaySpawnMessage { DelayTime = .5f, IsEnemyDelay = true, Threshold = 1 });
             }
         }
 
