@@ -15,6 +15,7 @@ namespace Assets.Scripts.Player
         private bool _isFalling;
         private Vector3 _basePosition;
         private Vector3 _jumpPinnacle;
+        private bool _fallFaster;
 
         public AudioClip JumpAudio;
 
@@ -22,7 +23,7 @@ namespace Assets.Scripts.Player
         private float _deathTime;
 
         private AnimationController _animationController;
-        public PlayerAnimations _animations;
+        private PlayerAnimations _animations;
 
         void Start()
         {
@@ -75,16 +76,22 @@ namespace Assets.Scripts.Player
                         _animationController.PlayAnimation(_animations.FallDownAnimation);
                     }
                 }
+
+                if (InputManager.IsPressed())
+                {
+                    _fallFaster = true;
+                }
             }
 
             if (_isFalling)
             {
-                transform.position = Vector3.MoveTowards(transform.position, _basePosition, JumpSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, _basePosition, JumpSpeed * Time.deltaTime * (_fallFaster ? 2 : 1));
 
                 if (transform.position == _basePosition)
                 {
                     _isJumping = false;
                     _isFalling = false;
+                    _fallFaster = false;
 
                     if (_isPlayerDead)
                     {
