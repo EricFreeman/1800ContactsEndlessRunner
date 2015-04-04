@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Messages;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Messages;
+using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -6,10 +8,11 @@ namespace Assets.Scripts.Managers
 {
     public class MusicManager : MonoBehaviour, IListener<PlayerDiedMessage>, IListener<ResumeRunningMessage>
     {
-        public AudioClip Main;
+        public List<AudioClip> Music;
         public AudioClip FuneralMarch;
 
         private AudioSource _audioSource;
+        private AudioClip _previousSong;
 
         private bool _isMusicPaused;
 
@@ -32,8 +35,21 @@ namespace Assets.Scripts.Managers
 
             if (!_audioSource.isPlaying)
             {
-                // TODO: Support more than one song
+                _audioSource.clip = GetRandomSong();
                 _audioSource.Play();
+            }
+        }
+
+        private AudioClip GetRandomSong()
+        {
+            while (true)
+            {
+                var newSong = Music.Random();
+                if (newSong != _previousSong)
+                {
+                    _previousSong = newSong;
+                    return newSong;
+                }
             }
         }
 
@@ -49,7 +65,7 @@ namespace Assets.Scripts.Managers
             if (_isMusicPaused)
             {
                 _isMusicPaused = false;
-                _audioSource.clip = Main;
+                _audioSource.clip = GetRandomSong();
                 _audioSource.Play();
             }
         }
