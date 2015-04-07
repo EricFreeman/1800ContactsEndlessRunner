@@ -48,7 +48,7 @@ namespace Assets.Scripts.UI
                 GetComponent<SpriteRenderer>().sprite = spriteToUse;
             }
 
-            if (InputManager.IsPressed() && !_isPlaying)
+            if (InputManager.IsPressedAboveBottomOfScreen() && !_isPlaying)
             {
                 _isPlaying = true;
                 GetComponent<SpriteRenderer>().sprite = Logo;
@@ -65,6 +65,16 @@ namespace Assets.Scripts.UI
                     Destroy(gameObject);
                 }
             }
+        }
+
+        public GameObject InstructionsPanel;
+        private GameObject _currentInstructionsPanel;
+        public GameObject Ui;
+
+        public void OpenInstructions()
+        {
+            _currentInstructionsPanel = Instantiate(InstructionsPanel);
+            _currentInstructionsPanel.transform.SetParent(Ui.transform, false);
         }
     }
 }
