@@ -12,7 +12,7 @@ namespace Assets.Scripts.Managers
 
         public static bool IsPressedAboveBottomOfScreen()
         {
-            return (Input.GetKeyDown(KeyCode.Space) || Input.touches.Count() > 0 && Input.GetTouch(0).position.y < Screen.height - 30);
+            return (Input.GetKeyDown(KeyCode.Space) || Input.touches.Count() > 0 && Input.GetTouch(0).position.y < Screen.height - 45);
         }
 
         public static bool IsPressedOnLeftSideOfScreen()
