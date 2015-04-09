@@ -6,7 +6,7 @@ using UnityEventAggregator;
 
 namespace Assets.Scripts.Player
 {
-    public class Player : MonoBehaviour, IListener<PlayerDiedMessage>
+    public class Player : MonoBehaviour, IListener<PlayerDiedMessage>, IListener<StartGameMessage>
     {
         public float JumpHeight = .75f;
         public float JumpSpeed = 2;
@@ -19,6 +19,7 @@ namespace Assets.Scripts.Player
 
         public AudioClip JumpAudio;
 
+        private bool _isGameStarted;
         private bool _isPlayerDead;
         private float _deathTime;
 
@@ -35,11 +36,13 @@ namespace Assets.Scripts.Player
             _animationController.PlayAnimation(_animations.IdleAnimation);
 
             this.Register<PlayerDiedMessage>();
+            this.Register<StartGameMessage>();
         }
 
         void OnRegister()
         {
             this.UnRegister<PlayerDiedMessage>();
+            this.UnRegister<StartGameMessage>();
         }
 
         void Update()
@@ -58,7 +61,7 @@ namespace Assets.Scripts.Player
                     _animationController.PlayAnimation(_animations.RunAnimation);
                 }
             }
-            else if (!_isJumping && InputManager.IsPressed() && !_isPlayerDead)
+            else if (!_isJumping && InputManager.IsPressed() && !_isPlayerDead && _isGameStarted)
             {
                 _isJumping = true;
                 _animationController.PlayAnimation(_animations.JumpUpAnimation);
@@ -118,6 +121,15 @@ namespace Assets.Scripts.Player
             {
                 _animationController.PlayAnimation(_animations.DieAnimation);
             }
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            _isGameStarted = true;
+            EventAggregator.SendMessage(new ResumeRunningMessage());
+            _isJumping = true;
+            _animationController.PlayAnimation(_animations.JumpUpAnimation);
+            AudioSource.PlayClipAtPoint(JumpAudio, Vector3.zero);
         }
     }
 }

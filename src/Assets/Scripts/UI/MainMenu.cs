@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Managers;
-using Assets.Scripts.Messages;
+﻿using Assets.Scripts.Messages;
 using UnityEngine;
 using UnityEventAggregator;
 
@@ -33,6 +32,13 @@ namespace Assets.Scripts.UI
 
         void Update()
         {
+            FlashLogo();
+            CheckForStartGame();
+            FadeLogo();
+        }
+
+        private void FlashLogo()
+        {
             _currentAnimationDelay--;
             if (_currentAnimationDelay <= 0 && !_isPlaying)
             {
@@ -47,14 +53,10 @@ namespace Assets.Scripts.UI
 
                 GetComponent<SpriteRenderer>().sprite = spriteToUse;
             }
+        }
 
-            if (InputManager.IsPressedAboveBottomOfScreen() && !_isPlaying)
-            {
-                _isPlaying = true;
-                GetComponent<SpriteRenderer>().sprite = Logo;
-                EventAggregator.SendMessage(new ResumeRunningMessage());
-            }
-
+        private void FadeLogo()
+        {
             if (_isPlaying)
             {
                 var color = GetComponent<SpriteRenderer>().color;
@@ -65,6 +67,21 @@ namespace Assets.Scripts.UI
                     Destroy(gameObject);
                 }
             }
+        }
+
+        private void CheckForStartGame()
+        {
+            if (!_isPlaying && Input.GetKeyDown(KeyCode.Space))
+            {
+                StartGame();
+            }
+        }
+
+        public void StartGame()
+        {
+            _isPlaying = true;
+            GetComponent<SpriteRenderer>().sprite = Logo;
+            EventAggregator.SendMessage(new StartGameMessage());
         }
 
         public GameObject InstructionsPanel;
